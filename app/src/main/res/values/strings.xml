@@ -2,4 +2,5 @@
     <string name="app_name">AleaChoice</string>
     <string name="delete_button">suppression</string>
     <string name="go_button">GO !</string>
+    <string name="add_text">Ajouter</string>
 </resources>
