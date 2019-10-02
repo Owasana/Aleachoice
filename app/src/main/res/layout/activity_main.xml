@@ -16,4 +16,17 @@
         android:scaleType="center"
         app:srcCompat="@android:drawable/ic_menu_delete" />
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="530dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/go_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="@string/go_button" />
+
 </LinearLayout>
