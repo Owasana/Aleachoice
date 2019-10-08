@@ -2,18 +2,19 @@ package model;
 
 import android.graphics.Color;
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Item {
+public class Item implements Serializable {
     private String m_name;
-    private Color m_color;
+    private int m_color;
 
-    private static Color randomColor() {
+    private static int randomColor() {
         Random random = new Random();
-        return Color.valueOf(Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255)));
+        return Color.rgb(random.nextInt(255), random.nextInt(255), random.nextInt(255));
     }
 
-    public Item(String name, Color color) {
+    public Item(String name, int color) {
         m_name = name;
         m_color = color;
     }
@@ -22,11 +23,11 @@ public class Item {
         this(name, randomColor());
     }
 
-    String name() {
+    public String name() {
         return m_name;
     }
 
-    Color color() {
+    public int color() {
         return m_color;
     }
 }

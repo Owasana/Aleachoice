@@ -4,4 +4,5 @@
     <string name="go_button">GO !</string>
     <string name="add_text">Ajouter</string>
     <string name="text_name_app">AleaChoice</string>
+    <string name="ok">Valider</string>
 </resources>

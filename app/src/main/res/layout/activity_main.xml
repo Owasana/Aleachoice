@@ -40,11 +40,13 @@
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <TextView
-        android:id="@+id/textView"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_text" />
+        android:layout_gravity="clip_horizontal|right|center_horizontal|end"
+        android:clickable="true"
+        app:srcCompat="@android:drawable/ic_menu_add" />
 
     <Button
         android:id="@+id/go_button"

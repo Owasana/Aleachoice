@@ -1,9 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Observable;
 import java.util.Random;
 
-public class Collection {
+public class Collection extends Observable {
     private ArrayList<Item> m_items;
     private Random m_random;
 
@@ -14,6 +16,8 @@ public class Collection {
 
     public void addItem(Item item) {
         m_items.add(item);
+        setChanged();
+        notifyObservers();
     }
 
     public int size() {
@@ -24,7 +28,7 @@ public class Collection {
         return m_items.get(index);
     }
 
-    public class PickResult {
+    public static class PickResult implements Serializable {
         public int index;
         public Item item;
     }
