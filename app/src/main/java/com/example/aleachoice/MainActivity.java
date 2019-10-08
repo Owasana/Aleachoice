@@ -39,15 +39,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        m_collection = new Collection();
+        // On essaie de recupérer les données de la dernière activité (e.g changement d'orientation du téléphone).
+        if (savedInstanceState != null && savedInstanceState.containsKey("collection")) {
+            m_collection = (Collection)savedInstanceState.getSerializable("collection");
+        }
+        // Sinon on crée une collection avec trois éléments.
+        else {
+            m_collection = new Collection();
 
-        Item item1 = new Item("Pizza");
-        Item item2 = new Item("Burger");
-        Item item3 = new Item("Tacos");
+            Item item1 = new Item("Pizza");
+            Item item2 = new Item("Burger");
+            Item item3 = new Item("Tacos");
 
-        m_collection.addItem(item1);
-        m_collection.addItem(item2);
-        m_collection.addItem(item3);
+            m_collection.addItem(item1);
+            m_collection.addItem(item2);
+            m_collection.addItem(item3);
+        }
 
         recyclerView = findViewById(R.id.recycler_view);
 
@@ -95,5 +102,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
 
+        savedInstanceState.putSerializable("collection", m_collection);
+    }
 }
