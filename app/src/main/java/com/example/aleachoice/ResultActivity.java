@@ -22,11 +22,11 @@ public class ResultActivity extends AppCompatActivity {
 
         result = findViewById(R.id.result);
 
-        Intent intent = getIntent();
+        /*Intent intent = getIntent();
         Collection.PickResult pickResult = (Collection.PickResult)intent.getSerializableExtra("result");
 
         Item result_item = pickResult.item;
         result.setText(result_item.name());
-        result.setTextColor(result_item.color());
+        result.setTextColor(result_item.color());*/
     }
 }

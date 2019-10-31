@@ -19,6 +19,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import model.Collection;
 import model.Item;
 import view.ItemAdapter;
@@ -34,17 +41,23 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog dialog;
     private TextView add_text;
 
+    private final static String CHOICE_STORAGE = "choice.data";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // On essaie de recupérer les données de la dernière activité (e.g changement d'orientation du téléphone).
-        if (savedInstanceState != null && savedInstanceState.containsKey("collection")) {
+        /*if (savedInstanceState != null && savedInstanceState.containsKey("collection")) {
             m_collection = (Collection)savedInstanceState.getSerializable("collection");
-        }
-        // Sinon on crée une collection avec trois éléments.
-        else {
+        }*/
+        try {
+            FileInputStream in = this.openFileInput(CHOICE_STORAGE);
+            ObjectInputStream br = new ObjectInputStream(in);
+            m_collection = (Collection)br.readObject();
+        } catch (Exception e) {
+            // Sinon on crée une collection avec trois éléments.
             m_collection = new Collection();
 
             Item item1 = new Item("Pizza");
@@ -106,6 +119,30 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
 
-        savedInstanceState.putSerializable("collection", m_collection);
+        //savedInstanceState.putSerializable("collection", m_collection);
+
+        try {
+            FileOutputStream out = this.openFileOutput(CHOICE_STORAGE, MODE_PRIVATE);
+            ObjectOutputStream br = new ObjectOutputStream(out);
+            br.writeObject(m_collection);
+        }
+        catch (Exception e) {
+
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        try {
+            super.onDestroy();
+            FileOutputStream out = this.openFileOutput(CHOICE_STORAGE, MODE_PRIVATE);
+            ObjectOutputStream br = new ObjectOutputStream(out);
+            br.writeObject(m_collection);
+        }
+        catch (Exception e) {
+
+        }
     }
 }
