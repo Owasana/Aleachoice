@@ -17,6 +17,11 @@ public class LabyrintheView extends View {
     @Override
     public void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
-        canvas.drawCircle(50, 50, 50, paint);
+        //canvas.drawCircle(50, 50, 50, paint);
+        drawMaze(canvas);
+    }
+
+    public void drawMaze(final Canvas canvas) {
+
     }
 }
