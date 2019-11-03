@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    private Collection m_collection;
+    private Collection collection;
     private Button go_button;
     private FloatingActionButton add_button;
     private AlertDialog.Builder builder;
@@ -50,23 +50,23 @@ public class MainActivity extends AppCompatActivity {
 
         // On essaie de recupérer les données de la dernière activité (e.g changement d'orientation du téléphone).
         /*if (savedInstanceState != null && savedInstanceState.containsKey("collection")) {
-            m_collection = (Collection)savedInstanceState.getSerializable("collection");
+            collection = (Collection)savedInstanceState.getSerializable("collection");
         }*/
         try {
             FileInputStream in = this.openFileInput(CHOICE_STORAGE);
             ObjectInputStream br = new ObjectInputStream(in);
-            m_collection = (Collection)br.readObject();
+            collection = (Collection)br.readObject();
         } catch (Exception e) {
             // Sinon on crée une collection avec trois éléments.
-            m_collection = new Collection();
+            collection = new Collection();
 
             Item item1 = new Item("Pizza");
             Item item2 = new Item("Burger");
             Item item3 = new Item("Tacos");
 
-            m_collection.addItem(item1);
-            m_collection.addItem(item2);
-            m_collection.addItem(item3);
+            collection.addItem(item1);
+            collection.addItem(item2);
+            collection.addItem(item3);
         }
 
         recyclerView = findViewById(R.id.recycler_view);
@@ -74,16 +74,15 @@ public class MainActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new ItemAdapter(m_collection);
+        mAdapter = new ItemAdapter(collection);
         recyclerView.setAdapter(mAdapter);
 
         go_button = findViewById(R.id.go_button);
         go_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Collection.PickResult result = m_collection.pick();
                 Intent intent = new Intent(MainActivity.this, ResultActivity.class);
-                intent.putExtra("result", result);
+                intent.putExtra("collection", collection);
                 startActivity(intent);
             }
         });
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         Item item = new Item(add_text.getText().toString());
-                        m_collection.addItem(item);
+                        collection.addItem(item);
                     }
                 });
 
@@ -119,12 +118,12 @@ public class MainActivity extends AppCompatActivity {
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
 
-        //savedInstanceState.putSerializable("collection", m_collection);
-
+        //savedInstanceState.putSerializable("collection", collection);
+        // TODO json
         try {
             FileOutputStream out = this.openFileOutput(CHOICE_STORAGE, MODE_PRIVATE);
             ObjectOutputStream br = new ObjectOutputStream(out);
-            br.writeObject(m_collection);
+            br.writeObject(collection);
         }
         catch (Exception e) {
 
@@ -139,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
             super.onDestroy();
             FileOutputStream out = this.openFileOutput(CHOICE_STORAGE, MODE_PRIVATE);
             ObjectOutputStream br = new ObjectOutputStream(out);
-            br.writeObject(m_collection);
+            br.writeObject(collection);
         }
         catch (Exception e) {
 

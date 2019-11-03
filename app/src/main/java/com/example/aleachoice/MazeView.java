@@ -6,9 +6,9 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class LabyrintheView extends View {
+public class MazeView extends View {
     private Paint paint;
-    public LabyrintheView(final Context context, AttributeSet attrs) {
+    public MazeView(final Context context, AttributeSet attrs) {
         super(context, attrs);
         paint = new Paint();
         paint.setARGB(255, 255, 0, 0);
