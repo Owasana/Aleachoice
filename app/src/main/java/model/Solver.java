@@ -18,9 +18,9 @@ public class Solver {
 
     public boolean solve(Maze.CaseIndex prec, Maze.CaseIndex curr, Path path)
     {
-        // SI on à atteind la exit.
+        // SI on à atteind la sortie.
         if (curr.equals(exit)) {
-            // Ajout de la exit dans le path
+            // Ajout de la sortie dans le chemin
             path.add(0, curr);
             return true;
         }
@@ -31,7 +31,7 @@ public class Solver {
             if (!neighbour.equals(prec)) {
                 // On continue sur un voisin
                 if (solve(curr, neighbour, path)) {
-                    // Ajout de la case dans le path
+                    // Ajout de la case dans le chemin
                     path.add(0, curr);
                     return true;
                 }

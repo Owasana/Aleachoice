@@ -63,25 +63,39 @@ public class ResultActivity extends AppCompatActivity {
 
         Exit exit = new Exit(MAZE_WIDTH / 2, MAZE_HEIGHT / 2);
 
+        final float radius = (float)(maze.getColumn() - 1) / 2.0f;
+
         for (int i = 0; i < collection.size(); ++i) {
-            Pion pion = new Pion(0, 0);
+            // Coordonnée polaire
+            final double angle = i * Math.PI * 2 / collection.size();
+            final int x = (int)(Math.cos(angle) * radius + radius);
+            final int y = (int)(Math.sin(angle) * radius + radius);
+            Pion pion = new Pion(x, y);
+
             Solver solver = new Solver(exit, pion, maze);
 
+            // Resolution et sauvegarde du resultat associé à un item
             ItemSolve result = new ItemSolve();
             result.item = collection.item(i);
             result.path = solver.solve();
-            System.out.println(result.path.size() + result.item.name()); // TODO DEBUG
             results.add(result);
         }
 
-        canvas.setMaze(maze);
-
+        // Tri des resultats par longueur de chemin.
         results.sort(new Comparator<ItemSolve>() {
             @Override
             public int compare(ItemSolve o1, ItemSolve o2) {
                 return Integer.compare(o1.path.size(), o2.path.size());
             }
         });
+
+        ArrayList<MazeView.ColoredPath> coloredPaths = new ArrayList<>();
+        for (ItemSolve result : results) {
+            coloredPaths.add(new MazeView.ColoredPath(result.path, result.item.color()));
+        }
+
+        canvas.setMaze(maze);
+        canvas.setPaths(coloredPaths);
 
         ItemSolve winner = results.get(0);
 
