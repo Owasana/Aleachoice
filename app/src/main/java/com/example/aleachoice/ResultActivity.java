@@ -2,9 +2,11 @@ package com.example.aleachoice;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -28,6 +30,8 @@ public class ResultActivity extends AppCompatActivity {
 
     final static int MAZE_WIDTH = 15; // TODO par rapport au nb item
     final static int MAZE_HEIGHT = 15;
+    // Temps en ms entre deux cases affichés.
+    final static int ANIMATION_PERIOD = 200;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,9 +101,30 @@ public class ResultActivity extends AppCompatActivity {
         canvas.setMaze(maze);
         canvas.setPaths(coloredPaths);
 
-        ItemSolve winner = results.get(0);
+        final ItemSolve winner = results.get(0);
+        final int nbCases = winner.path.size();
+        // Définition d'une animation pour chaque case du chemin gagnant.
+        ValueAnimator animator = ValueAnimator.ofInt(0, nbCases);
+        // Affichage toutes les 1 secondes
+        animator.setDuration(ANIMATION_PERIOD * winner.path.size());
+        // Valeur linéaire par rapport au temps
+        animator.setInterpolator(new LinearInterpolator());
 
-        result.setText(winner.item.name());
-        result.setTextColor(winner.item.color());
+        // Invalidation du canvas et ajout d'un case à dessiner.
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (int)animation.getAnimatedValue();
+                canvas.showCases(value);
+
+                if (value == nbCases) {
+                    result.setText(winner.item.name());
+                    result.setTextColor(winner.item.color());
+                }
+            }
+
+        });
+
+        animator.start();
     }
 }

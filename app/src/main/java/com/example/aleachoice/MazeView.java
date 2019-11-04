@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import java.util.ArrayList;
 
@@ -32,8 +33,8 @@ public class MazeView extends View {
 
     private Maze maze;
     private ArrayList<ColoredPath> paths;
-    int currIndex;
-
+    // Nombre de case actuellement affichés.
+    int showedCases;
 
     public MazeView(final Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -48,34 +49,20 @@ public class MazeView extends View {
 
         maze = null;
         paths = null;
+        showedCases = 0;
     }
 
     public void setMaze(Maze maze) {
         this.maze = maze;
-        invalidate();
     }
 
     public void setPaths(ArrayList<ColoredPath> paths) {
         this.paths = paths;
-        currIndex = 0;
-        ColoredPath winnerPath = paths.get(0);
+    }
 
-        // Définition d'une animation pour chaque case du chemin gagnant.
-        ValueAnimator animator = ValueAnimator.ofInt(0, winnerPath.path.size());
-        // Affichage toutes les 1 secondes
-        animator.setDuration(1000);
-
-        // Invalidation du canvas et ajout d'un case à dessiner.
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (int)animation.getAnimatedValue();
-                invalidate();
-                currIndex = value;
-            }
-        });
-
-        animator.start();
+    public void showCases(int nbCases) {
+        showedCases = nbCases;
+        invalidate();
     }
 
     @Override
@@ -93,7 +80,7 @@ public class MazeView extends View {
         final int caseSize = (innerSize - (BORDER_WIDTH * (maze.getColumn() - 1))) / maze.getColumn();
 
         drawMaze(canvas, mazeSize, marginHeight, marginWidth, halfBorder, innerLeft, innerTop, innerSize, caseSize);
-        drawPaths(canvas, mazeSize, marginHeight, marginWidth, halfBorder, innerLeft, innerTop, innerSize, caseSize, currIndex);
+        drawPaths(canvas, mazeSize, marginHeight, marginWidth, halfBorder, innerLeft, innerTop, innerSize, caseSize, showedCases);
     }
 
     public void drawMaze(final Canvas canvas, int mazeSize, int marginHeight, int marginWidth,
