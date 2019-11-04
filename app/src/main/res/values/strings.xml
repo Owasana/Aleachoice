@@ -3,5 +3,5 @@
     <string name="delete_button">suppression</string>
     <string name="go_button">GO !</string>
     <string name="text_name_app">AleaChoice</string>
-    <string name="add_text">Ajouter un nouvel élement</string>
+    <string name="ok">Valider</string>
 </resources>

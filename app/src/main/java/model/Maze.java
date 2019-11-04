@@ -45,12 +45,20 @@ public class Maze {
         }
     }
 
-    public boolean getwallV(int l, int c)
+    public int getLine() {
+        return line;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    public boolean getWallV(int l, int c)
     {
         return wallsV[l][c];
     }
 
-    public boolean getwallH(int l, int c)
+    public boolean getWallH(int l, int c)
     {
         return wallsH[l][c];
     }

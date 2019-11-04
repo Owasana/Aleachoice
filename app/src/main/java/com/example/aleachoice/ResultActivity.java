@@ -46,7 +46,8 @@ public class ResultActivity extends AppCompatActivity {
             paths.add(solver.solve());
         }
 
-
+        MazeView canvas = findViewById(R.id.canvas);
+        canvas.setMaze(maze);
 
         //Item result_item = pickResult.item;
         result.setText("done");
