@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import model.Maze;
-
+//com.example.aleachoice.MazeView
 public class MazeView extends View {
     private Paint background;
     private Paint border;
@@ -28,6 +28,7 @@ public class MazeView extends View {
 
     public void setMaze(Maze maze) {
         this.maze = maze;
+        invalidate();
     }
 
     @Override
@@ -55,6 +56,10 @@ public class MazeView extends View {
                 getWidth() - marginWidth - halfBorder,
                 getHeight() - marginHeight - halfBorder, border);
 
+        if (maze == null) {
+            return; // pas de dessin des murs
+        }
+
         final int innerLeft = marginWidth + halfBorder;
         final int innerTop = marginHeight + halfBorder;
         final int innerSize = mazeSize - (BORDER_WIDTH * 2);
@@ -67,7 +72,6 @@ public class MazeView extends View {
                 if (maze.getWallV(l, c)) {
                     final int x = innerLeft + (caseSize + BORDER_WIDTH) * (c + 1);
                     final int y = innerTop + (caseSize + BORDER_WIDTH) * l;
-                    System.out.println("murV" + x + ", " + y + ", " + caseSize + ", " + innerSize);
                     canvas.drawLine(x, y, x, y + caseSize + BORDER_WIDTH, border);
                 }
             }
@@ -80,14 +84,17 @@ public class MazeView extends View {
                 if (maze.getWallH(l, c)) {
                     final int x = innerLeft + (caseSize + BORDER_WIDTH) * c;
                     final int y = innerTop + (caseSize + BORDER_WIDTH) * (l + 1);
-                    System.out.println("murH" + x + ", " + y + ", " + caseSize + ", " + innerSize);
                     canvas.drawLine(x, y, x + caseSize + BORDER_WIDTH, y, border);
                 }
             }
         }
+    }
 
-        if (maze == null) {
-            return; // pas de dessin
-        }
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (widthMeasureSpec < heightMeasureSpec)
+            super.onMeasure(widthMeasureSpec, widthMeasureSpec);
+        else
+            super.onMeasure(heightMeasureSpec, heightMeasureSpec);
     }
 }
