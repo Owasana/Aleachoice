@@ -10,7 +10,7 @@ public class Collection extends Observable implements Serializable {
     private Random m_random;
 
     public Collection() {
-        m_items = new ArrayList<Item>();
+        m_items = new ArrayList<>();
         m_random = new Random();
     }
 
@@ -39,5 +39,14 @@ public class Collection extends Observable implements Serializable {
         pick.item = item(pick.index);
 
         return pick;
+    }
+
+    /** Déplace le contenu d'une collection sur une autre
+     *
+     * @param other La collection déplacé, inutilisable par la suite.
+     */
+    public void move(Collection other) {
+        m_items = other.m_items;
+        m_random = other.m_random;
     }
 }

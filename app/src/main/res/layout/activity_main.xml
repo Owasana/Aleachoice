@@ -18,40 +18,28 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/text_name_app" />
+            android:text="@string/app_name"
+            android:textSize="20sp" />
 
-        <ImageButton
-            android:id="@+id/delete_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:contentDescription="@string/delete_button"
-            android:scaleType="center"
-            app:srcCompat="@android:drawable/ic_menu_delete" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
+
+    </FrameLayout>
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="clip_horizontal|right|center_horizontal|end"
-        android:clickable="true"
-        app:srcCompat="@android:drawable/ic_menu_add" />
-
     <Button
         android:id="@+id/go_button"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:text="@string/go_button" />
+        android:text="@string/go_button"
+        android:textSize="32sp" />
 
 </LinearLayout>

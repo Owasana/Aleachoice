@@ -1,45 +1,29 @@
 package com.example.aleachoice;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.PopupWindow;
-import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import org.w3c.dom.Text;
-
-import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import model.Collection;
 import model.Item;
-import view.ItemAdapter;
+import view.AddItemFragment;
+import view.BasicItemFragment;
+import view.DeleteItemFragment;
 
-public class MainActivity extends AppCompatActivity {
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+public class MainActivity extends AppCompatActivity implements BasicItemFragment.OnFragmentInteractionListener {
     private Collection collection;
     private Button go_button;
-    private FloatingActionButton add_button;
-    private AlertDialog.Builder builder;
-    private AlertDialog dialog;
-    private TextView add_text;
 
     private final static String CHOICE_STORAGE = "choice.data";
 
@@ -69,13 +53,9 @@ public class MainActivity extends AppCompatActivity {
             collection.addItem(item3);
         }
 
-        recyclerView = findViewById(R.id.recycler_view);
-
-        layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-
-        mAdapter = new ItemAdapter(collection);
-        recyclerView.setAdapter(mAdapter);
+        if (savedInstanceState == null) {
+            switchAdd();
+        }
 
         go_button = findViewById(R.id.go_button);
         go_button.setOnClickListener(new View.OnClickListener() {
@@ -86,32 +66,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-
-        View dialogView = inflater.inflate(R.layout.add_dialog, null);
-        add_text = dialogView.findViewById(R.id.add_text);
-
-        builder.setView(dialogView)
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        Item item = new Item(add_text.getText().toString());
-                        collection.addItem(item);
-                    }
-                });
-
-        dialog = builder.create();
-
-        add_button = findViewById(R.id.add_button);
-        add_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.show();
-            }
-        });
-
     }
 
     @Override
@@ -143,5 +97,19 @@ public class MainActivity extends AppCompatActivity {
         catch (Exception e) {
 
         }
+    }
+
+    // Changement vers le fragment de suppression
+    @Override
+    public void switchDelete() {
+        DeleteItemFragment fragment = DeleteItemFragment.newInstance(collection);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
+    }
+
+    // Changement vers le fragment d'ajout
+    @Override
+    public void switchAdd() {
+        AddItemFragment fragment = AddItemFragment.newInstance(collection);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fragment).commit();
     }
 }

@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">AleaChoice</string>
-    <string name="delete_button">suppression</string>
     <string name="go_button">GO !</string>
-    <string name="text_name_app">AleaChoice</string>
     <string name="ok">Valider</string>
+    <string name="restart">Relancer</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

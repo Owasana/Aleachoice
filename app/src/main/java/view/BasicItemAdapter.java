@@ -15,7 +15,7 @@ import java.util.Observer;
 import model.Collection;
 import model.Item;
 
-public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> implements Observer {
+public class BasicItemAdapter extends RecyclerView.Adapter<BasicItemAdapter.ViewHolder> implements Observer {
     private Collection m_collection;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -27,7 +27,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> im
         }
     }
 
-    public ItemAdapter(Collection collection) {
+    public BasicItemAdapter(Collection collection) {
         m_collection = collection;
     }
 

@@ -10,7 +10,6 @@ import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -20,6 +19,7 @@ import model.Item;
 import model.Maze;
 import model.Pion;
 import model.Solver;
+import view.MazeView;
 
 public class ResultActivity extends AppCompatActivity {
     private Collection collection;
@@ -62,7 +62,7 @@ public class ResultActivity extends AppCompatActivity {
         class ItemSolve {
             public Solver.Path path;
             public Item item;
-        };
+        }
         ArrayList<ItemSolve> results = new ArrayList<>();
 
         Exit exit = new Exit(MAZE_WIDTH / 2, MAZE_HEIGHT / 2);
@@ -93,6 +93,7 @@ public class ResultActivity extends AppCompatActivity {
             }
         });
 
+        // Création de chemin coloré par la couleur de l'item
         ArrayList<MazeView.ColoredPath> coloredPaths = new ArrayList<>();
         for (ItemSolve result : results) {
             coloredPaths.add(new MazeView.ColoredPath(result.path, result.item.color()));

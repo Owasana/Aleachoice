@@ -1,4 +1,4 @@
-package com.example.aleachoice;
+package view;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -14,7 +14,6 @@ import java.util.ArrayList;
 import model.Maze;
 import model.Solver;
 
-//com.example.aleachoice.MazeView
 public class MazeView extends View {
     final static int BORDER_WIDTH = 20; // TODO par rapport à la taille du laby
 
@@ -26,7 +25,7 @@ public class MazeView extends View {
             this.path = path;
             this.color = color;
         }
-    };
+    }
 
     private Paint background;
     private Paint border;
@@ -126,7 +125,6 @@ public class MazeView extends View {
     public void drawPaths(final Canvas canvas, int mazeSize, int marginHeight, int marginWidth,
                           int halfBorder, int innerLeft, int innerTop, int innerSize, int caseSize, int nbCase)
     {
-        System.out.println("draw paths");
         if (paths == null) {
             return;
         }
@@ -134,7 +132,6 @@ public class MazeView extends View {
         // Parcous inverse pour dessiner le gagnant en dernier
         for (int i = paths.size() - 1; i >= 0; --i) {
             ColoredPath cpath = paths.get(i);
-            System.out.println(cpath.path.size());
 
             // Couleur de dessin
             Paint paint = new Paint();
