@@ -1,8 +1,5 @@
 package view;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -10,15 +7,11 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.example.aleachoice.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import model.Collection;
-import model.Item;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,7 +47,7 @@ public class DeleteItemFragment extends BasicItemFragment {
         // On ne controlle pas la création du fragment, la collection peut ne pas encore exister.
         if (collection != null) {
             tmpCollection = new Collection();
-            tmpCollection.move(collection);
+            tmpCollection.copy(collection);
             super.initView(view, new DeleteItemAdapter(tmpCollection));
 
             ok_button = view.findViewById(R.id.ok_button);
@@ -62,7 +55,7 @@ public class DeleteItemFragment extends BasicItemFragment {
                 @Override
                 public void onClick(View v) {
                     // Copier le contenu de la collection modifié dans l'originale
-                    collection.move(tmpCollection);
+                    collection.copy(tmpCollection);
                     // Retour au fragment d'ajout
                     mListener.switchAdd();
                 }
@@ -74,7 +67,7 @@ public class DeleteItemFragment extends BasicItemFragment {
                 @Override
                 public void onClick(View v) {
                     // Restoration du contenu à l'original.
-                    tmpCollection.move(collection);
+                    tmpCollection.copy(collection);
                     mListener.switchAdd();
                 }
             });

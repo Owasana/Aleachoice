@@ -28,8 +28,13 @@ public class ResultActivity extends AppCompatActivity {
     private MazeView canvas;
     private Button restartButton;
 
+    // Animation d'affichage des chemins.
+    ValueAnimator animator;
+
     // Temps en ms entre deux cases affichés.
     final static int ANIMATION_PERIOD = 200;
+    // 10 case de labyrynthe pour un item.
+    final static int ITEM_SURFACE = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +48,8 @@ public class ResultActivity extends AppCompatActivity {
         Intent intent = getIntent();
         collection = (Collection) intent.getSerializableExtra("collection");
 
-        // Une rapide évaluation de la taille du labyrinthe
-        final int mazeSize = collection.size() * 3;
+        // Augmentation de la surface proportionellement au nb d'élement
+        final int mazeSize = (int)(Math.sqrt((double)collection.size() * ITEM_SURFACE));
 
         restartButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,16 +62,25 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     private void generateAndSolve(int mazeSize) {
+        // Reinitialisation du résultat
+        result.setText("");
+        // Si il existe une animation, l'arrêter
+        if (animator != null) {
+            animator.cancel();
+        }
+
+        // Création du labyrinthe et génération
         Maze maze = new Maze(mazeSize, mazeSize);
         maze.generateFusion();
 
+        // Element par solveur, soit un chemin associé à un item.
         class ItemSolve {
             public Solver.Path path;
             public Item item;
         }
         ArrayList<ItemSolve> results = new ArrayList<>();
 
-        // Placer la sortie au centre
+        // Placement de la sortie au centre
         Exit exit = new Exit(mazeSize / 2, mazeSize / 2);
 
         final float radius = (float)(maze.getColumn() - 1) / 2.0f;
@@ -108,7 +122,7 @@ public class ResultActivity extends AppCompatActivity {
         final ItemSolve winner = results.get(0);
         final int nbCases = winner.path.size();
         // Définition d'une animation pour chaque case du chemin gagnant.
-        ValueAnimator animator = ValueAnimator.ofInt(0, nbCases);
+        animator = ValueAnimator.ofInt(0, nbCases);
         // Affichage toutes les 1 secondes
         animator.setDuration(ANIMATION_PERIOD * winner.path.size());
         // Valeur linéaire par rapport au temps

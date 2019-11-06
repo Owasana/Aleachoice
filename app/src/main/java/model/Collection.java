@@ -34,22 +34,9 @@ public class Collection extends Observable implements Serializable {
         notifyObservers();
     }
 
-    public static class PickResult implements Serializable {
-        public int index;
-        public Item item;
-    }
-
-    public PickResult pick() {
-        PickResult pick = new PickResult();
-        pick.index = m_random.nextInt(size());
-        pick.item = item(pick.index);
-
-        return pick;
-    }
-
     /** Copie du contenu d'une collection sur une autre
      */
-    public void move(Collection other) {
+    public void copy(Collection other) {
         m_items = (ArrayList<Item>) other.m_items.clone();
     }
 }

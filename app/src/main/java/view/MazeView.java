@@ -161,8 +161,6 @@ public class MazeView extends View {
             return;
         }
 
-        final int margin = (int)(((float)caseSize) * PATH_CASE_RATIO / 2.0f);
-        final int halfMargin = margin / 2;
 
         // Parcous inverse pour dessiner le gagnant en dernier
         for (int i = paths.size() - 1; i >= 0; --i) {
@@ -176,6 +174,10 @@ public class MazeView extends View {
             // Dessin de n-1 cases
             for (int j = 0; j < nbCase - 1; ++j) {
                 Maze.CaseIndex cind = cpath.path.get(j);
+                // La marge minimal
+                final int minMargin = (int)(((float)caseSize) * PATH_CASE_RATIO / 2.0f);
+                // Marge graduelle en fonction de la distance avec la case avec la tête du chemin
+                final int margin = minMargin + minMargin / 3 * (nbCase - 1 - j) / (nbCase - 1);
                 drawPathCase(canvas, paint, cind, borderWidth, halfBorder, innerLeft, innerTop, caseSize, margin);
             }
 
@@ -185,7 +187,8 @@ public class MazeView extends View {
             // Dessin de la n case (dernière case).
             if (nbCase > 0) {
                 Maze.CaseIndex cind = cpath.path.get(nbCase - 1);
-                drawPathCase(canvas, paint, cind, borderWidth, halfBorder, innerLeft, innerTop, caseSize, halfMargin);
+                final int margin = (int)(((float)caseSize) * PATH_CASE_RATIO / 4.0f);
+                drawPathCase(canvas, paint, cind, borderWidth, halfBorder, innerLeft, innerTop, caseSize, margin);
             }
         }
     }
