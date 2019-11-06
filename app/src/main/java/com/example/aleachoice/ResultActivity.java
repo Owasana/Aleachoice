@@ -28,8 +28,6 @@ public class ResultActivity extends AppCompatActivity {
     private MazeView canvas;
     private Button restartButton;
 
-    final static int MAZE_WIDTH = 15; // TODO par rapport au nb item
-    final static int MAZE_HEIGHT = 15;
     // Temps en ms entre deux cases affichés.
     final static int ANIMATION_PERIOD = 200;
 
@@ -45,18 +43,21 @@ public class ResultActivity extends AppCompatActivity {
         Intent intent = getIntent();
         collection = (Collection) intent.getSerializableExtra("collection");
 
+        // Une rapide évaluation de la taille du labyrinthe
+        final int mazeSize = collection.size() * 3;
+
         restartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                generateAndSolve();
+                generateAndSolve(mazeSize);
             }
         });
 
-        generateAndSolve();
+        generateAndSolve(mazeSize);
     }
 
-    private void generateAndSolve() {
-        Maze maze = new Maze(MAZE_HEIGHT, MAZE_WIDTH);
+    private void generateAndSolve(int mazeSize) {
+        Maze maze = new Maze(mazeSize, mazeSize);
         maze.generateFusion();
 
         class ItemSolve {
@@ -65,7 +66,8 @@ public class ResultActivity extends AppCompatActivity {
         }
         ArrayList<ItemSolve> results = new ArrayList<>();
 
-        Exit exit = new Exit(MAZE_WIDTH / 2, MAZE_HEIGHT / 2);
+        // Placer la sortie au centre
+        Exit exit = new Exit(mazeSize / 2, mazeSize / 2);
 
         final float radius = (float)(maze.getColumn() - 1) / 2.0f;
 
@@ -101,6 +103,7 @@ public class ResultActivity extends AppCompatActivity {
 
         canvas.setMaze(maze);
         canvas.setPaths(coloredPaths);
+        canvas.setExit(exit);
 
         final ItemSolve winner = results.get(0);
         final int nbCases = winner.path.size();

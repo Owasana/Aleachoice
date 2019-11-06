@@ -55,7 +55,7 @@ public class DeleteItemFragment extends BasicItemFragment {
         if (collection != null) {
             tmpCollection = new Collection();
             tmpCollection.move(collection);
-            super.initView(view, new BasicItemAdapter(tmpCollection));
+            super.initView(view, new DeleteItemAdapter(tmpCollection));
 
             ok_button = view.findViewById(R.id.ok_button);
             ok_button.setOnClickListener(new View.OnClickListener() {

@@ -1,22 +1,18 @@
 package view;
 
-import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
 
 import java.util.ArrayList;
 
+import model.Exit;
 import model.Maze;
 import model.Solver;
 
 public class MazeView extends View {
-    final static int BORDER_WIDTH = 20; // TODO par rapport à la taille du laby
-
     static public class ColoredPath {
         public Solver.Path path;
         public int color;
@@ -27,24 +23,34 @@ public class MazeView extends View {
         }
     }
 
-    private Paint background;
-    private Paint border;
+    // La transparence des case sur une chemin
+    static final int PATH_CASE_ALPHA = 150;
+    // La taille d'une case de chemin par rapport à une case
+    static final float PATH_CASE_RATIO = 0.5f;
+    
+
+    private Paint backgroundPaint;
+    private Paint borderPaint;
+    private Paint exitPaint;
 
     private Maze maze;
+    private Exit exit;
     private ArrayList<ColoredPath> paths;
-    // Nombre de case actuellement affichés.
+    // Nombre de case actuellement affichées.
     int showedCases;
 
     public MazeView(final Context context, AttributeSet attrs) {
         super(context, attrs);
-        background = new Paint();
-        background.setARGB(255, 255, 255, 200);
+        backgroundPaint = new Paint();
+        backgroundPaint.setARGB(255, 255, 255, 200);
 
-        border = new Paint();
-        border.setARGB(255, 0, 0, 0);
-        border.setStrokeWidth(BORDER_WIDTH);
-        border.setStyle(Paint.Style.STROKE);
-        border.setStrokeCap(Paint.Cap.SQUARE);
+        borderPaint = new Paint();
+        borderPaint.setARGB(255, 0, 0, 0);
+        borderPaint.setStyle(Paint.Style.STROKE);
+        borderPaint.setStrokeCap(Paint.Cap.SQUARE);
+
+        exitPaint = new Paint();
+        exitPaint.setARGB(255, 255, 0, 0);
 
         maze = null;
         paths = null;
@@ -57,6 +63,10 @@ public class MazeView extends View {
 
     public void setPaths(ArrayList<ColoredPath> paths) {
         this.paths = paths;
+    }
+
+    public void setExit(Exit exit) {
+        this.exit = exit;
     }
 
     public void showCases(int nbCases) {
@@ -72,26 +82,32 @@ public class MazeView extends View {
         final int mazeSize = Math.min(getWidth(), getHeight());
         final int marginHeight = (getHeight() - mazeSize) / 2;
         final int marginWidth = (getWidth() - mazeSize) / 2;
-        final int halfBorder = BORDER_WIDTH / 2;
+        // La bordure represente 1/10 d'une case
+        final int borderWidth = mazeSize / maze.getColumn() / 10;
+        final int halfBorder = borderWidth / 2;
         final int innerLeft = marginWidth + halfBorder;
         final int innerTop = marginHeight + halfBorder;
-        final int innerSize = mazeSize - (BORDER_WIDTH * 2);
-        final int caseSize = (innerSize - (BORDER_WIDTH * (maze.getColumn() - 1))) / maze.getColumn();
+        final int innerSize = mazeSize - (borderWidth * 2);
+        final int caseSize = (innerSize - (borderWidth * (maze.getColumn() - 1))) / maze.getColumn();
 
-        drawMaze(canvas, mazeSize, marginHeight, marginWidth, halfBorder, innerLeft, innerTop, innerSize, caseSize);
-        drawPaths(canvas, mazeSize, marginHeight, marginWidth, halfBorder, innerLeft, innerTop, innerSize, caseSize, showedCases);
+        /// Dessin d'une ligne de la largeur de la bordure
+        borderPaint.setStrokeWidth(borderWidth);
+
+        drawMaze(canvas, mazeSize, marginHeight, marginWidth, borderWidth, halfBorder, innerLeft, innerTop, innerSize, caseSize);
+        drawExit(canvas, mazeSize, marginHeight, marginWidth, borderWidth, halfBorder, innerLeft, innerTop, innerSize, caseSize);
+        drawPaths(canvas, mazeSize, marginHeight, marginWidth, borderWidth, halfBorder, innerLeft, innerTop, innerSize, caseSize, showedCases);
     }
 
-    public void drawMaze(final Canvas canvas, int mazeSize, int marginHeight, int marginWidth,
+    public void drawMaze(final Canvas canvas, int mazeSize, int marginHeight, int marginWidth, int borderWidth,
                          int halfBorder, int innerLeft, int innerTop, int innerSize, int caseSize)
     {
         canvas.drawRect(marginWidth, marginHeight,
-                getWidth() - marginWidth, getHeight() - marginHeight, background);
+                getWidth() - marginWidth, getHeight() - marginHeight, backgroundPaint);
 
-        // Dessin de l'enceinte (pas pour la musique ni les mollard) TODO
+        // Dessin de l'enceinte (pas pour la musique ni les mollards)
         canvas.drawRect(marginWidth + halfBorder, marginHeight + halfBorder,
                 getWidth() - marginWidth - halfBorder,
-                getHeight() - marginHeight - halfBorder, border);
+                getHeight() - marginHeight - halfBorder, borderPaint);
 
         if (maze == null) {
             return; // pas de dessin des murs
@@ -102,9 +118,9 @@ public class MazeView extends View {
             for (int c = 0; c < maze.getColumn() - 1; ++c) {
                 // Dessin du mur droit des cases
                 if (maze.getWallV(l, c)) {
-                    final int x = innerLeft + (caseSize + BORDER_WIDTH) * (c + 1);
-                    final int y = innerTop + (caseSize + BORDER_WIDTH) * l;
-                    canvas.drawLine(x, y, x, y + caseSize + BORDER_WIDTH, border);
+                    final int x = innerLeft + (caseSize + borderWidth) * (c + 1);
+                    final int y = innerTop + (caseSize + borderWidth) * l;
+                    canvas.drawLine(x, y, x, y + caseSize + borderWidth, borderPaint);
                 }
             }
         }
@@ -114,20 +130,39 @@ public class MazeView extends View {
             for (int c = 0; c < maze.getColumn(); ++c) {
                 // Dessin du mur droit des cases
                 if (maze.getWallH(l, c)) {
-                    final int x = innerLeft + (caseSize + BORDER_WIDTH) * c;
-                    final int y = innerTop + (caseSize + BORDER_WIDTH) * (l + 1);
-                    canvas.drawLine(x, y, x + caseSize + BORDER_WIDTH, y, border);
+                    final int x = innerLeft + (caseSize + borderWidth) * c;
+                    final int y = innerTop + (caseSize + borderWidth) * (l + 1);
+                    canvas.drawLine(x, y, x + caseSize + borderWidth, y, borderPaint);
                 }
             }
         }
     }
 
-    public void drawPaths(final Canvas canvas, int mazeSize, int marginHeight, int marginWidth,
+    public void drawExit(final Canvas canvas, int mazeSize, int marginHeight, int marginWidth, int borderWidth,
+                         int halfBorder, int innerLeft, int innerTop, int innerSize, int caseSize)
+    {
+        final int x = innerLeft + (caseSize + borderWidth) * (maze.getColumn() / 2) + halfBorder + caseSize / 2;
+        final int y = innerTop + (caseSize + borderWidth) * (maze.getLine() / 2) + halfBorder + caseSize / 2;
+        canvas.drawCircle(x, y, caseSize / 2, exitPaint);
+    }
+
+    public void drawPathCase(final Canvas canvas, Paint paint, Maze.CaseIndex cind, int borderWidth,
+                             int halfBorder, int innerLeft, int innerTop, int caseSize, int margin)
+    {
+        final int x = innerLeft + (caseSize + borderWidth) * cind.getX() + halfBorder;
+        final int y = innerTop + (caseSize + borderWidth) * cind.getY() + halfBorder;
+        canvas.drawRect(x + margin, y + margin, x + caseSize - margin, y + caseSize - margin, paint);
+    }
+
+    public void drawPaths(final Canvas canvas, int mazeSize, int marginHeight, int marginWidth, int borderWidth,
                           int halfBorder, int innerLeft, int innerTop, int innerSize, int caseSize, int nbCase)
     {
         if (paths == null) {
             return;
         }
+
+        final int margin = (int)(((float)caseSize) * PATH_CASE_RATIO / 2.0f);
+        final int halfMargin = margin / 2;
 
         // Parcous inverse pour dessiner le gagnant en dernier
         for (int i = paths.size() - 1; i >= 0; --i) {
@@ -136,12 +171,21 @@ public class MazeView extends View {
             // Couleur de dessin
             Paint paint = new Paint();
             paint.setColor(cpath.color);
+            paint.setAlpha(PATH_CASE_ALPHA);
 
-            for (int j = 0; j < nbCase; ++j) {
+            // Dessin de n-1 cases
+            for (int j = 0; j < nbCase - 1; ++j) {
                 Maze.CaseIndex cind = cpath.path.get(j);
-                final int x = innerLeft + (caseSize + BORDER_WIDTH) * cind.getX() + halfBorder;
-                final int y = innerTop + (caseSize + BORDER_WIDTH) * cind.getY() + halfBorder;
-                canvas.drawRect(x, y, x + caseSize, y + caseSize, paint);
+                drawPathCase(canvas, paint, cind, borderWidth, halfBorder, innerLeft, innerTop, caseSize, margin);
+            }
+
+
+            paint.setAlpha(255);
+
+            // Dessin de la n case (dernière case).
+            if (nbCase > 0) {
+                Maze.CaseIndex cind = cpath.path.get(nbCase - 1);
+                drawPathCase(canvas, paint, cind, borderWidth, halfBorder, innerLeft, innerTop, caseSize, halfMargin);
             }
         }
     }

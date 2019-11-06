@@ -28,6 +28,12 @@ public class Collection extends Observable implements Serializable {
         return m_items.get(index);
     }
 
+    public void remove(int index) {
+        m_items.remove(index);
+        setChanged();
+        notifyObservers();
+    }
+
     public static class PickResult implements Serializable {
         public int index;
         public Item item;
@@ -41,12 +47,9 @@ public class Collection extends Observable implements Serializable {
         return pick;
     }
 
-    /** Déplace le contenu d'une collection sur une autre
-     *
-     * @param other La collection déplacé, inutilisable par la suite.
+    /** Copie du contenu d'une collection sur une autre
      */
     public void move(Collection other) {
-        m_items = other.m_items;
-        m_random = other.m_random;
+        m_items = (ArrayList<Item>) other.m_items.clone();
     }
 }

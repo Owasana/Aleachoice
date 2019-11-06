@@ -16,7 +16,7 @@ import model.Collection;
 import model.Item;
 
 public class BasicItemAdapter extends RecyclerView.Adapter<BasicItemAdapter.ViewHolder> implements Observer {
-    private Collection m_collection;
+    protected Collection m_collection;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
@@ -29,6 +29,7 @@ public class BasicItemAdapter extends RecyclerView.Adapter<BasicItemAdapter.View
 
     public BasicItemAdapter(Collection collection) {
         m_collection = collection;
+        m_collection.addObserver(this);
     }
 
     @Override
