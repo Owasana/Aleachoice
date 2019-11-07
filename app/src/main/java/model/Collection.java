@@ -2,6 +2,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
 import java.util.Random;
 
@@ -32,6 +33,12 @@ public class Collection extends Observable implements Serializable {
         m_items.remove(index);
         setChanged();
         notifyObservers();
+    }
+
+    public ArrayList<Item> shuffled() {
+        ArrayList<Item> list = (ArrayList<Item>)m_items.clone();
+        Collections.shuffle(list);
+        return list;
     }
 
     /** Copie du contenu d'une collection sur une autre
