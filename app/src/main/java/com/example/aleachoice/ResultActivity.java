@@ -85,9 +85,11 @@ public class ResultActivity extends AppCompatActivity {
 
         final float radius = (float)(maze.getColumn() - 1) / 2.0f;
 
-        for (int i = 0; i < collection.size(); ++i) {
+        ArrayList<Item> shuffledItems = collection.shuffled();
+
+        for (int i = 0; i < shuffledItems.size(); ++i) {
             // Coordonnée polaire
-            final double angle = i * Math.PI * 2 / collection.size();
+            final double angle = i * Math.PI * 2 / shuffledItems.size();
             final int x = (int)(Math.cos(angle) * radius + radius);
             final int y = (int)(Math.sin(angle) * radius + radius);
             Pion pion = new Pion(x, y);
@@ -96,7 +98,7 @@ public class ResultActivity extends AppCompatActivity {
 
             // Resolution et sauvegarde du resultat associé à un item
             ItemSolve result = new ItemSolve();
-            result.item = collection.item(i);
+            result.item = shuffledItems.get(i);
             result.path = solver.solve();
             results.add(result);
         }
@@ -132,7 +134,7 @@ public class ResultActivity extends AppCompatActivity {
         animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
-                int value = (int)animation.getAnimatedValue();
+                final int value = (int)animation.getAnimatedValue();
                 canvas.showCases(value);
 
                 if (value == nbCases) {
