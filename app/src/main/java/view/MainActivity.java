@@ -1,14 +1,13 @@
-package com.example.aleachoice;
+package view;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import com.example.aleachoice.R;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,9 +16,6 @@ import java.io.ObjectOutputStream;
 
 import model.Collection;
 import model.Item;
-import view.AddItemFragment;
-import view.BasicItemFragment;
-import view.DeleteItemFragment;
 
 public class MainActivity extends AppCompatActivity implements BasicItemFragment.OnFragmentInteractionListener {
     private Collection collection;

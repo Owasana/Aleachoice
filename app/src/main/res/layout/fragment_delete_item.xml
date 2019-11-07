@@ -35,6 +35,13 @@
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/consigne"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/consigne"
+            android:textColor="#F8960404" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/item_list"
             android:layout_width="match_parent"

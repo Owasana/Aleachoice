@@ -1,6 +1,8 @@
-package com.example.aleachoice;
+package view;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.animation.ValueAnimator;
 import android.content.Intent;
@@ -9,6 +11,8 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.aleachoice.R;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -57,6 +61,10 @@ public class ResultActivity extends AppCompatActivity {
                 generateAndSolve(mazeSize);
             }
         });
+
+        RecyclerView recyclerView = findViewById(R.id.element_list);
+
+        recyclerView.setAdapter(new ResultItemAdapter(collection));
 
         generateAndSolve(mazeSize);
     }
