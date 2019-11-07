@@ -16,6 +16,7 @@
             android:id="@+id/element_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="3" />

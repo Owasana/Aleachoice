@@ -10,6 +10,7 @@ import android.widget.Button;
 import com.example.aleachoice.R;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -21,22 +22,20 @@ public class MainActivity extends AppCompatActivity implements BasicItemFragment
     private Collection collection;
     private Button go_button;
 
-    private final static String CHOICE_STORAGE = "choice.data";
+    private final static String CHOICE_STORAGE = "choice.json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // On essaie de recupérer les données de la dernière activité (e.g changement d'orientation du téléphone).
-        /*if (savedInstanceState != null && savedInstanceState.containsKey("collection")) {
-            collection = (Collection)savedInstanceState.getSerializable("collection");
-        }*/
+        // On essaye de récupérer la collection depuis le fichier JSON
         try {
-            FileInputStream in = this.openFileInput(CHOICE_STORAGE);
-            ObjectInputStream br = new ObjectInputStream(in);
-            collection = (Collection)br.readObject();
-        } catch (Exception e) {
+            collection = Collection.read(openFileInput(CHOICE_STORAGE));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        if (collection == null) {
             // Sinon on crée une collection avec trois éléments.
             collection = new Collection();
 
@@ -68,15 +67,10 @@ public class MainActivity extends AppCompatActivity implements BasicItemFragment
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
 
-        //savedInstanceState.putSerializable("collection", collection);
-        // TODO json
         try {
-            FileOutputStream out = this.openFileOutput(CHOICE_STORAGE, MODE_PRIVATE);
-            ObjectOutputStream br = new ObjectOutputStream(out);
-            br.writeObject(collection);
-        }
-        catch (Exception e) {
-
+            collection.save(openFileOutput(CHOICE_STORAGE, MODE_PRIVATE));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -85,13 +79,9 @@ public class MainActivity extends AppCompatActivity implements BasicItemFragment
         super.onDestroy();
 
         try {
-            super.onDestroy();
-            FileOutputStream out = this.openFileOutput(CHOICE_STORAGE, MODE_PRIVATE);
-            ObjectOutputStream br = new ObjectOutputStream(out);
-            br.writeObject(collection);
-        }
-        catch (Exception e) {
-
+            collection.save(openFileOutput(CHOICE_STORAGE, MODE_PRIVATE));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
