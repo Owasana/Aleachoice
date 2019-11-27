@@ -22,20 +22,17 @@ public class MainActivity extends AppCompatActivity implements BasicItemFragment
     private Collection collection;
     private Button go_button;
 
-    private final static String CHOICE_STORAGE = "choice.json";
+    private final static String CHOICE_STORAGE = "choice.data";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // On essaye de récupérer la collection depuis le fichier JSON
+        // On essaie de recupérer les données de la dernière activité
         try {
             collection = Collection.read(openFileInput(CHOICE_STORAGE));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        if (collection == null) {
             // Sinon on crée une collection avec trois éléments.
             collection = new Collection();
 
@@ -48,10 +45,12 @@ public class MainActivity extends AppCompatActivity implements BasicItemFragment
             collection.addItem(item3);
         }
 
+        // Ajout du fragment d'ajout d'item par défaut
         if (savedInstanceState == null) {
             switchAdd();
         }
 
+        // Définition du bouton de lancement de la simulation
         go_button = findViewById(R.id.go_button);
         go_button.setOnClickListener(new View.OnClickListener() {
             @Override
