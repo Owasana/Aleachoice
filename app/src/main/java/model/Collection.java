@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Observable;
 import java.util.Random;
 
+
 public class Collection extends Observable implements Serializable {
     private ArrayList<Item> m_items;
     private Random m_random;
